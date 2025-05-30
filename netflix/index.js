@@ -8,8 +8,16 @@ function leerSeries() {
 const series = leerSeries();
 
 // mostrar por pantalla todas las series cuyo genero sea terror
-function mostrarSeriesGenero(genero) {
-    return series.filter((serie) => serie.genero.toLowerCase() === genero.toLowerCase());
+function obtenerListaSeriesPorAño(genero, anio1, anio2) {
+    return series.filter((serie) => {
+        return serie.genero.toLowerCase() == genero.toLowerCase() && (serie.anio >= anio1 && serie.anio <= anio2);
+    });
+}
+
+function obtenerListaSeries(genero) {
+    return series.filter((serie) => {
+        return serie.genero.toLowerCase() === genero.toLowerCase()
+    });
 }
 
 //console.log(mostrarSeriesGenero("terror"));
@@ -26,19 +34,28 @@ function mostrarSeriesPorAnioYTemporadas(cantTemp, anio) {
 
 // obtener la cantidad total de visitas de las series de ciencia ficcion
 
-function obtenerVistasTotalesCF(genero) {
-    return Object.values(series).reduce((acumulador,serie) => 
-        serie.genero.toLowerCase() == genero.toLowerCase() ? acumulador += serie.cant_visitas : acumulador += 0, 0);
+function obtenerVistasTotalesGenero(genero) {
+    let seriesGenero = obtenerListaSeries(genero)
+
+    return Object.values(seriesGenero).reduce((acumulador,serie) =>  acumulador += serie.cant_visitas, 0);
 }
 
-console.log(obtenerVistasTotalesCF("Ciencia ficción"));
+//console.log(obtenerVistasTotalesGenero("Ciencia ficción",));
 
 // obtener el promedio de cantidad de visitas de las series cuyo genero sea drama y su año de filmacion sea entre 2012 y 2020
 
-function mostrarPromedioGeneroYAnio(genero, anio) {
-    return series.filter((serie) => {
-        return serie.genero.toLowerCase() === genero.toLowerCase() && serie.anio >= anio;
-    });
+function obtenerPromedioVisitas(genero, anio1, anio2) {
+    let seriesGenero = obtenerListaSeriesPorAño(genero, anio1, anio2);
+    return seriesGenero.reduce((visitas, serie) => visitas += serie.cant_visitas, 0) / seriesGenero.length;
 }
 
+//console.log(obtenerPromedioVisitas("Drama", 2012, 2020))
 // crear una funcion que nos diga si todas las series del genero drama que hayan sido filmadas entre 2012 y 2020 tiene su titulo que comienza con la letra A
+
+function mostrarPeliculasPorLetra(genero, anio1, anio2, char) {
+    let seriesGenero = obtenerListaSeriesPorAño(genero, anio1, anio2);
+
+    return seriesGenero.every((serie) => serie.nombre.toLowerCase().startsWith(char.toLowerCase()));
+}
+
+//console.log(mostrarPeliculasPorLetra("Drama", 2012, 2020, "a"));
